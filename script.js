@@ -432,6 +432,7 @@
   if (aiStepper) initStepper(aiStepper);
   initIkigai(document.getElementById('ikigai-board'));
   initSingleChoice(document.getElementById('research-lenses'));
+  initSingleChoice(document.getElementById('channel-behavior'));
   initSingleChoice(document.getElementById('test-types'));
 
 })();

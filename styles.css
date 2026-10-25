@@ -355,6 +355,9 @@ p{margin:0 0 1em}
 .choice-detail{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px}
 .choice-detail h4{margin:0 0 .35em;font-size:.95rem;color:var(--primary)}
 .choice-detail p{margin:0;font-size:.9rem;color:var(--muted)}
+.choice-detail p + p{margin-top:.65em}
+.beat-title{margin:16px 0 8px;font-size:1rem}
+#channel-behavior .framing-strip{margin:12px 0}
 .choice-detail[hidden]{display:none!important}
 .ikigai-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 
