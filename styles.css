@@ -340,49 +340,29 @@ p{margin:0 0 1em}
 .app-box p:last-child{margin-bottom:0}
 .mini-demo{font-style:italic;font-size:.85rem!important;color:var(--accent)!important}
 
-/* Agentic AI — cognitive gaming evidence */
-#case-ai{overflow:hidden}
+/* Group MIKI KPI case + digital marketplace journey */
+#case-ai,#case-miki{overflow:hidden}
 .ai-cover{margin:0 0 18px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#0f1522}
 .ai-cover img{display:block;width:100%;height:auto;max-height:260px;object-fit:cover;object-position:center;background:#0f1522}
 .ai-cover figcaption{margin:0;padding:10px 14px;font-size:.82rem;color:var(--muted);line-height:1.4;border-top:1px solid var(--border);background:var(--bg-alt)}
-.ai-genre-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.ai-genre-card{text-align:left;font:inherit;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-alt);color:var(--text);cursor:pointer;min-height:44px;transition:border-color .15s ease,background .15s ease,box-shadow .15s ease}
-.ai-genre-card strong{display:block;margin:.35em 0 .4em;font-size:.95rem;color:var(--primary)}
-.ai-genre-card p{margin:0;font-size:.85rem;color:var(--muted);line-height:1.45}
-.ai-genre-tag{display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
-.ai-genre-card.is-active,.ai-genre-card[aria-pressed="true"]{border-color:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 25%,transparent);background:var(--surface)}
-.ai-note-card{background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px}
-.ai-note-card h4{margin:0 0 .4em;font-size:.92rem;color:var(--primary)}
-.ai-note-card p{margin:0;font-size:.88rem;color:var(--muted)}
-.ai-chip-cloud,.ai-filter-row{display:flex;flex-wrap:nowrap;gap:8px;max-width:100%;margin-bottom:10px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;scrollbar-width:thin}
-.ai-chip{flex:0 0 auto;font:inherit;font-size:.82rem;font-weight:600;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:var(--bg-alt);color:var(--muted);cursor:pointer;min-height:40px;transition:opacity .15s ease,background .15s ease,border-color .15s ease,color .15s ease;white-space:nowrap}
-.ai-chip.is-active{background:var(--primary);border-color:var(--primary);color:#fff}
-[data-theme="dark"] .ai-chip.is-active{color:#0f1522}
-.ai-genre-toggle{margin-bottom:14px}
-.ai-scatter-wrap{position:relative;width:100%;max-width:100%;height:min(360px,62vw);min-height:260px;margin:8px 0 10px;background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:8px 6px 4px}
-.ai-scatter-wrap canvas{width:100%!important;height:100%!important}
-.ai-scatter-legend{display:flex;flex-wrap:wrap;gap:12px 18px;font-size:.78rem;color:var(--muted);margin-bottom:10px;align-items:center}
-.ai-scatter-legend i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px;border:2px solid var(--primary)}
-.ai-scatter-legend .leg-cs{border-radius:50%;background:color-mix(in srgb,var(--accent) 35%,transparent)}
-.ai-scatter-legend .leg-int{clip-path:polygon(50% 0,100% 100%,0 100%);background:color-mix(in srgb,var(--accent) 35%,transparent);border:none;width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-bottom:12px solid var(--accent);margin-right:8px}
-.ai-scatter-legend .leg-note{opacity:.85;font-style:italic}
-.ai-point-detail{margin-bottom:12px}
-.ai-point-detail .meta{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
-.ai-point-detail .pill{font-size:.72rem;font-weight:700;padding:4px 8px;border-radius:999px;background:var(--chip);color:var(--primary);border:1px solid var(--border)}
-.ai-point-detail .pill.warn{color:#a15c00;border-color:#e8c48a;background:#fff6e6}
-[data-theme="dark"] .ai-point-detail .pill.warn{color:#ffcc80;border-color:#6b4a1a;background:#2a2114}
-.ai-callout-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
-.ai-pipe{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:4px 2px 12px;scrollbar-width:thin;max-width:100%}
-.ai-pipe-step{flex:0 0 auto;font:inherit;font-size:.8rem;font-weight:600;padding:10px 12px;border-radius:10px;border:1px solid var(--border);background:var(--bg-alt);color:var(--muted);cursor:pointer;white-space:nowrap;min-height:44px}
-.ai-pipe-step.is-active,.ai-pipe-step[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:#fff}
-[data-theme="dark"] .ai-pipe-step.is-active,[data-theme="dark"] .ai-pipe-step[aria-pressed="true"]{color:#0f1522}
-.ai-pipe-detail{margin-bottom:8px}
+.choice-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px}
+@media (min-width:760px){
+  .choice-grid.cols-2{grid-template-columns:1fr 1fr}
+  .choice-grid.cols-3{grid-template-columns:1fr 1fr 1fr}
+}
+.choice-btn{text-align:left;font:inherit;padding:14px 16px;border-radius:12px;border:1px solid var(--border);background:var(--bg-alt);color:var(--text);cursor:pointer;min-height:44px}
+.choice-btn strong{display:block;margin:0 0 .35em;font-size:.95rem;color:var(--primary)}
+.choice-btn span{display:block;font-size:.88rem;color:var(--muted);line-height:1.45}
+.choice-btn.is-active,.choice-btn[aria-pressed="true"]{border-color:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 25%,transparent);background:var(--surface)}
+.choice-detail{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+.choice-detail h4{margin:0 0 .35em;font-size:.95rem;color:var(--primary)}
+.choice-detail p{margin:0;font-size:.9rem;color:var(--muted)}
+.choice-detail[hidden]{display:none!important}
+.ikigai-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 
 @media (max-width:760px){
   .ai-cover img{max-height:180px}
-  .ai-genre-grid{grid-template-columns:1fr}
-  .ai-callout-grid{grid-template-columns:1fr}
-  .ai-scatter-wrap{height:300px;min-height:240px}
+  .ikigai-grid{grid-template-columns:1fr}
 
   .case{padding:16px}
   .pf-placeholders{grid-template-columns:1fr}
