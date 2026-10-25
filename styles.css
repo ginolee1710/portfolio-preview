@@ -273,6 +273,7 @@ p{margin:0 0 1em}
 .gap-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 .gap-card{background:var(--bg-alt);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
 .gap-card.highlight{border-color:var(--accent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--accent) 35%,transparent)}
+.step-panel > .gap-card{margin-top:12px}
 .gap-card h4{margin:0 0 6px;font-size:.95rem}
 .gap-card p{margin:0;font-size:.88rem;color:var(--muted)}
 .gap-num{font-size:1.35rem!important;font-weight:800;margin:4px 0 8px!important;color:var(--primary)!important}
@@ -340,11 +341,8 @@ p{margin:0 0 1em}
 .app-box p:last-child{margin-bottom:0}
 .mini-demo{font-style:italic;font-size:.85rem!important;color:var(--accent)!important}
 
-/* Group MIKI KPI case + digital marketplace journey */
-#case-ai,#case-miki{overflow:hidden}
-.ai-cover{margin:0 0 18px;border-radius:12px;overflow:hidden;border:1px solid var(--border);background:#0f1522}
-.ai-cover img{display:block;width:100%;height:auto;max-height:260px;object-fit:cover;object-position:center;background:#0f1522}
-.ai-cover figcaption{margin:0;padding:10px 14px;font-size:.82rem;color:var(--muted);line-height:1.4;border-top:1px solid var(--border);background:var(--bg-alt)}
+/* Digital marketplace journey */
+#case-ai{overflow:hidden}
 .choice-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px}
 @media (min-width:760px){
   .choice-grid.cols-2{grid-template-columns:1fr 1fr}
@@ -361,7 +359,6 @@ p{margin:0 0 1em}
 .ikigai-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
 
 @media (max-width:760px){
-  .ai-cover img{max-height:180px}
   .ikigai-grid{grid-template-columns:1fr}
 
   .case{padding:16px}

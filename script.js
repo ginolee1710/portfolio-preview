@@ -384,7 +384,7 @@
   var mbaTabs = document.querySelector('[data-tabs="mba"]');
   if (mbaTabs) initTabs(mbaTabs);
 
-  /* --- Group MIKI KPI choices + digital-marketplace journey --- */
+  /* --- Digital-marketplace journey --- */
   function initSingleChoice(root) {
     if (!root) return;
     var buttons = Array.prototype.slice.call(root.querySelectorAll('[data-choice]'));
@@ -427,10 +427,6 @@
     });
     sync();
   }
-
-  var mikiStepper = document.querySelector('[data-stepper="miki"]');
-  if (mikiStepper) initStepper(mikiStepper);
-  initSingleChoice(document.getElementById('miki-choices'));
 
   var aiStepper = document.querySelector('[data-stepper="ai-journey"]');
   if (aiStepper) initStepper(aiStepper);
