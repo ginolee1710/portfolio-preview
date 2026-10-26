@@ -57,7 +57,7 @@
 
   // Skill filters
   var chips = Array.prototype.slice.call(document.querySelectorAll('.chip'));
-  var skills = Array.prototype.slice.call(document.querySelectorAll('#skills-grid li'));
+  var skills = Array.prototype.slice.call(document.querySelectorAll('#skills-grid .skill-group'));
   chips.forEach(function (chip) {
     chip.addEventListener('click', function () {
       var f = chip.getAttribute('data-filter');
@@ -184,88 +184,190 @@
     go(0);
   }
 
-  /* --- Carlsberg ladder (synthetic HKD) --- */
-  var LADDER = {
-    '1kc': {
-      label: 'per can · 1KC',
-      brands: [
-        { name: 'Carlsberg', sub: 'Danish Pilsner', prices: [14.9, 12.9, 11.9, 9.9] },
-        { name: 'Heineken', sub: 'same segment', prices: [15.9, 13.9, 12.5, 10.9] },
-        { name: 'Budweiser', sub: 'same segment', prices: [13.9, 11.9, 10.9, 9.5] }
+  /* --- Carlsberg PSP ladder (illustrative HKD per 500ml can) --- */
+  var SCALE_MIN = 5;
+  var SCALE_MAX = 14;
+  var LADDER = [
+    {
+      name: 'Carlsberg',
+      tiers: [
+        { id: 'EDLP', price: 12.0, weeks: null },
+        { id: 'PSP1', price: 10.5, weeks: 5 },
+        { id: 'PSP2', price: 8.5, weeks: 8 },
+        { id: 'PSP3', price: 7.0, weeks: 2 }
       ]
     },
-    '4pk': {
-      label: 'per can equiv · 4-pack',
-      brands: [
-        { name: 'Carlsberg', sub: 'Danish Pilsner', prices: [12.5, 11.0, 10.0, 8.8] },
-        { name: 'Heineken', sub: 'same segment', prices: [13.2, 11.8, 10.8, 9.5] },
-        { name: 'Budweiser', sub: 'same segment', prices: [11.8, 10.5, 9.8, 8.5] }
+    {
+      name: 'Heineken',
+      tiers: [
+        { id: 'EDLP', price: 13.0, weeks: null },
+        { id: 'PSP1', price: 11.5, weeks: 4 },
+        { id: 'PSP2', price: 9.5, weeks: 6 },
+        { id: 'PSP3', price: 8.0, weeks: 4 }
       ]
     },
-    '6pk': {
-      label: 'per can equiv · 6-pack',
-      brands: [
-        { name: 'Carlsberg', sub: 'Danish Pilsner', prices: [11.5, 10.2, 9.3, 8.2] },
-        { name: 'Heineken', sub: 'same segment', prices: [12.2, 10.9, 9.9, 8.8] },
-        { name: 'Budweiser', sub: 'same segment', prices: [10.9, 9.7, 8.9, 7.9] }
+    {
+      name: 'Budweiser',
+      tiers: [
+        { id: 'EDLP', price: 11.0, weeks: null },
+        { id: 'PSP1', price: 9.5, weeks: 7 },
+        { id: 'PSP2', price: 7.5, weeks: 9 },
+        { id: 'PSP3', price: 6.0, weeks: 3 }
       ]
     }
-  };
-  var TIERS = ['EDLP', 'PSP1', 'PSP2', 'PSP3'];
+  ];
+  var activeTier = 'all';
+  var activeBrand = '';
 
-  function renderLadder(pack) {
-    var chart = document.getElementById('ladder-chart');
-    if (!chart) return;
-    var data = LADDER[pack];
-    var max = 18;
-    var html = '';
-    data.brands.forEach(function (b) {
-      html += '<div class="ladder-row"><div class="ladder-brand">' + b.name + '<small>' + b.sub + ' · ' + data.label + '</small></div><div class="ladder-bars">';
-      b.prices.forEach(function (p, i) {
-        var h = Math.round((p / max) * 48);
-        var promo = i > 0 ? ' is-promo' : '';
-        html += '<div class="bar-cell' + promo + '"><span class="bar" style="height:' + h + 'px"></span><span class="tier">' + TIERS[i] + '</span><span class="price">$' + p.toFixed(1) + '</span></div>';
-      });
-      html += '</div></div>';
-    });
-    chart.innerHTML = html;
+  function ladderPct(price) {
+    return ((price - SCALE_MIN) / (SCALE_MAX - SCALE_MIN)) * 100;
   }
 
-  var packBtns = Array.prototype.slice.call(document.querySelectorAll('.pack-toggle .seg'));
-  packBtns.forEach(function (btn) {
+  function hkd(n) {
+    var s = n.toFixed(2);
+    if (s.slice(-3) === '.00') s = s.slice(0, -3);
+    return 'HK$' + s;
+  }
+
+  function tierOf(brand, id) {
+    for (var i = 0; i < brand.tiers.length; i++) {
+      if (brand.tiers[i].id === id) return brand.tiers[i];
+    }
+    return brand.tiers[0];
+  }
+
+  function weekPhrase(tier) {
+    if (tier.weeks == null) return 'Everyday list price, not a promo-week count.';
+    return 'Promo frequency: ' + tier.weeks + ' weeks (illustrative).';
+  }
+
+  function sameTierPhrase(id, exceptName) {
+    var bits = [];
+    LADDER.forEach(function (b) {
+      if (b.name === exceptName) return;
+      var t = tierOf(b, id);
+      var bit = b.name + ' ' + hkd(t.price);
+      if (t.weeks != null) bit += ' (' + t.weeks + ' weeks)';
+      bits.push(bit);
+    });
+    return 'Same tier: ' + bits.join(', ') + '.';
+  }
+
+  function setLadderTip(brandName, tierId) {
+    var tip = document.getElementById('ladder-tip');
+    if (!tip) return;
+    if (!brandName) {
+      if (tierId && tierId !== 'all') {
+        var bits = LADDER.map(function (b) {
+          var t = tierOf(b, tierId);
+          var bit = b.name + ' ' + hkd(t.price);
+          if (t.weeks != null) bit += ' · ' + t.weeks + ' weeks';
+          else bit += ' · everyday list';
+          return bit;
+        });
+        tip.textContent = tierId + ' across brands, HKD per 500ml can. ' + bits.join('. ') + '.';
+      } else {
+        tip.textContent = 'Tap a marker. PSP3 on Carlsberg is HK$7 per can; PSP2, PSP1 and EDLP step up from that floor. The note is promo frequency in weeks.';
+      }
+      return;
+    }
+    var brand = null;
+    LADDER.forEach(function (b) { if (b.name === brandName) brand = b; });
+    if (!brand) return;
+    var tier = tierOf(brand, tierId);
+    tip.textContent = brand.name + ' · ' + tier.id + ' · ' + hkd(tier.price) + ' per 500ml can. ' + weekPhrase(tier) + ' ' + sameTierPhrase(tier.id, brand.name);
+  }
+
+  function renderLadder() {
+    var chart = document.getElementById('ladder-chart');
+    if (!chart) return;
+    var axis = '<div class="err-axis" aria-hidden="true">' +
+      '<span style="bottom:100%">HK$14</span>' +
+      '<span style="bottom:66.67%">11</span>' +
+      '<span style="bottom:33.33%">8</span>' +
+      '<span style="bottom:0">5</span></div>';
+    var guides = '';
+    if (activeTier !== 'all') {
+      var pts = LADDER.map(function (b, i) {
+        var t = tierOf(b, activeTier);
+        var x = ((i + 0.5) / LADDER.length) * 100;
+        var y = 100 - ladderPct(t.price);
+        return x.toFixed(2) + ',' + y.toFixed(2);
+      }).join(' ');
+      guides = '<svg class="err-guides" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="' + pts + '" fill="none" stroke="currentColor" stroke-width="1.25" vector-effect="non-scaling-stroke" stroke-dasharray="4 3"/></svg>';
+    }
+    var cols = '';
+    LADDER.forEach(function (b) {
+      var lo = ladderPct(b.tiers[b.tiers.length - 1].price);
+      var hi = ladderPct(b.tiers[0].price);
+      var marks = '';
+      b.tiers.forEach(function (t) {
+        var hot = activeTier === 'all' || activeTier === t.id;
+        var on = activeBrand === b.name && activeTier === t.id;
+        var cls = 'err-mark' + (hot ? ' is-hot' : ' is-dim') + (on ? ' is-on' : '');
+        var y = ladderPct(t.price).toFixed(2);
+        marks += '<button type="button" class="' + cls + '" style="bottom:' + y + '%" data-brand="' + b.name + '" data-tier="' + t.id + '" aria-pressed="' + (on ? 'true' : 'false') + '" aria-label="' + b.name + ' ' + t.id + ' ' + hkd(t.price) + ' per 500ml can. ' + weekPhrase(t) + '"><span class="err-dot"></span></button>';
+      });
+      cols += '<div class="err-col"><div class="err-stage"><span class="err-stem" style="bottom:' + lo.toFixed(2) + '%;height:' + (hi - lo).toFixed(2) + '%"></span>' + marks + '</div></div>';
+    });
+    var names = LADDER.map(function (b) { return '<span>' + b.name + '</span>'; }).join('');
+    chart.innerHTML = axis + '<div class="err-plot-wrap">' + guides + '<div class="err-plot">' + cols + '</div><div class="err-names">' + names + '</div></div>';
+  }
+
+  var ladderChart = document.getElementById('ladder-chart');
+  if (ladderChart) {
+    ladderChart.addEventListener('click', function (e) {
+      var btn = e.target.closest ? e.target.closest('.err-mark') : null;
+      if (!btn || !ladderChart.contains(btn)) return;
+      activeBrand = btn.getAttribute('data-brand');
+      activeTier = btn.getAttribute('data-tier');
+      var tierBtns = document.querySelectorAll('.tier-toggle .seg');
+      Array.prototype.forEach.call(tierBtns, function (b) {
+        var on = b.getAttribute('data-tier') === activeTier;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      setLadderTip(activeBrand, activeTier);
+      renderLadder();
+    });
+  }
+
+  var tierBtns = Array.prototype.slice.call(document.querySelectorAll('.tier-toggle .seg'));
+  tierBtns.forEach(function (btn) {
     btn.addEventListener('click', function () {
-      packBtns.forEach(function (b) { b.classList.remove('is-active'); });
-      btn.classList.add('is-active');
-      renderLadder(btn.getAttribute('data-pack'));
+      activeTier = btn.getAttribute('data-tier');
+      if (activeTier === 'all') activeBrand = '';
+      tierBtns.forEach(function (b) {
+        var on = b === btn;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', String(on));
+      });
+      setLadderTip(activeBrand, activeTier);
+      renderLadder();
     });
   });
-  renderLadder('1kc');
+  renderLadder();
 
-  /* Scenario planning — synthetic directional deltas */
+  /* Scenario planning — synthetic directional deltas, tier and weeks only */
   var tierNames = ['EDLP', 'PSP1', 'PSP2', 'PSP3'];
-  var packPushNames = ['Low', 'Medium', 'High'];
 
   function updateScenario() {
     var tierEl = document.getElementById('sc-tier');
     var freqEl = document.getElementById('sc-freq');
-    var packEl = document.getElementById('sc-pack');
-    if (!tierEl) return;
+    if (!tierEl || !freqEl) return;
     var tier = +tierEl.value;
     var freq = +freqEl.value;
-    var pack = +packEl.value;
 
     document.getElementById('tier-label').textContent = tierNames[tier];
     tierEl.setAttribute('aria-valuetext', tierNames[tier]);
     document.getElementById('freq-label').textContent = String(freq);
-    document.getElementById('pack-push-label').textContent = packPushNames[pack];
 
-    // Baseline: PSP2, 6 weeks, med pack push → 0
+    // Baseline: PSP2, 6 weeks → 0
     // Deeper tier → +vol, -NS quality, -GPAL
-    // Higher freq → +vol (diminishing), -GPAL
-    // Pack push → +vol quality, +NS, +GPAL
-    var vol = (tier - 2) * 3 + (freq - 6) * 1.5 + (pack - 1) * 2;
-    var ns = (2 - tier) * 2.5 + (6 - freq) * 0.8 + (pack - 1) * 3;
-    var gp = (2 - tier) * 3.5 + (6 - freq) * 1.2 + (pack - 1) * 2.5;
+    // Higher freq → +vol, -GPAL
+    var vol = (tier - 2) * 3 + (freq - 6) * 1.5;
+    var ns = (2 - tier) * 2.5 + (6 - freq) * 0.8;
+    var gp = (2 - tier) * 3.5 + (6 - freq) * 1.2;
 
     function fmt(v) {
       if (Math.abs(v) < 0.05) return { text: 'flat', cls: '' };
@@ -281,14 +383,14 @@
     gEl.textContent = gF.text; gEl.className = gF.cls;
 
     var note = '';
-    if (tier >= 3 && freq >= 8) note = 'Deep cuts + high frequency: volume may spike, but net sales and GPAL usually soften — demo pattern.';
-    else if (pack >= 2 && tier <= 2) note = 'Strong pack-conversion push with controlled depth: often the cleaner trade-off on volume quality.';
-    else if (freq <= 3) note = 'Sparse calendar: less promo noise, but you may leave volume on the table vs peers.';
-    else note = 'Nudge the sliders — watch how tier depth, frequency and pack push pull volume vs GPAL in opposite directions.';
+    if (tier >= 3 && freq >= 8) note = 'A long PSP3 calendar: volume may spike, but net sales and GPAL usually soften. The floor in this demo stays HK$7 on Carlsberg.';
+    else if (tier === 2 && freq >= 8) note = 'PSP2 on a long calendar is the clutter. Fewer weeks is the lever, not a deeper floor.';
+    else if (freq <= 3) note = 'A short calendar: less promo noise, and you may leave volume on the table versus peers.';
+    else note = 'Move the tier and the week count. Watch volume pull against net sales and GPAL.';
     document.getElementById('scenario-note').textContent = note;
   }
 
-  ['sc-tier', 'sc-freq', 'sc-pack'].forEach(function (id) {
+  ['sc-tier', 'sc-freq'].forEach(function (id) {
     var el = document.getElementById(id);
     if (el) {
       el.addEventListener('input', updateScenario);
@@ -317,9 +419,14 @@
       body: 'Live view of brews in tank — fermentation stage, gravity checks, holds. Escalations when a batch slips the packaging window.',
       bi: 'BI cue: batches in progress, yield variance, QA holds.'
     },
+    mat: {
+      title: 'Packaging materials',
+      body: 'Kegs, bottles and labels are planned as their own beat, before a packaging run is booked. A line that is ready still waits if the keg, bottle or label is not.',
+      bi: 'BI cue: material cover vs brew plan, label lots, keg float.'
+    },
     pack: {
       title: 'Packaging runs',
-      body: 'Can / bottle / keg lines scheduled against demand and tank readiness. Changeovers and mini-runs eat efficiency.',
+      body: 'Once kegs, bottles and labels are in, the can, bottle and keg lines run against demand and tank readiness. Changeovers and short runs eat efficiency.',
       bi: 'BI cue: line utilisation, planned vs actual cases, scrap.'
     },
     wh: {
@@ -331,6 +438,12 @@
       title: 'Logistics',
       body: 'Deliveries to on-trade, retail and events — route density, cold-chain and cut-off times.',
       bi: 'BI cue: on-time delivery, cost per drop, failed deliveries.'
+    },
+    tours: {
+      title: 'Weekly brewery tours',
+      body: 'Tours were hosted every week — a taproom rhythm, not a one-off open day. The still is on Instagram; this page keeps the link rather than a stand-in photo.',
+      media: '<div class="tour-ph" role="img" aria-label="Placeholder. The brewery tour photo is on Instagram and is not embedded here."><strong>Tour photo</strong><span>Instagram still not embedded</span></div><p><a href="https://www.instagram.com/p/Ck-o_IBJh_J/" target="_blank" rel="noopener">See the photo on Instagram</a></p>',
+      bi: 'BI cue: weekly tour bookings vs taproom capacity.'
     },
     bill: {
       title: 'Billing',
@@ -349,13 +462,14 @@
     },
     plan: {
       title: 'Production planning',
-      body: 'Close the loop: demand signal → brew plan → packaging → inventory targets. The AGM seat is where trade-offs get decided.',
-      bi: 'BI cue: plan attainment, capacity vs pipeline, SKU prioritisation.'
+      body: 'Close the loop in Ekos: demand signal, brew plan, packaging materials, inventory targets. The AGM seat is where those trade-offs get decided.',
+      bi: 'BI cue: plan attainment in Ekos, capacity vs pipeline, material cover.'
     },
     brand: {
-      title: 'Branding, marketing & new craft ideas',
-      body: 'Seasonal drops, collabs and tap-room stories — fed by what production can actually brew and what AR shows is selling.',
-      bi: 'BI cue: new-SKU sell-through, event ROI, brand mix.'
+      title: 'Branding, marketing and collaborations',
+      body: 'Seasonal drops and the 「墨水漂流·貳」 collaboration with Chapman To\u2019s Lateshow, plus interviews. No episode-by-episode claims here — only the collaboration and the interviews. Stories stay inside what production can brew.',
+      media: '<a class="show-thumb" href="https://www.youtube.com/watch?v=kxZNsgUzM9c" target="_blank" rel="noopener"><img src="assets/moxiu-piaoliu-thumb.jpg" alt="YouTube thumbnail for 墨水漂流·貳" width="1280" height="720"></a>',
+      bi: 'BI cue: collaboration reach, interview mix, sell-through of featured beers.'
     }
   };
 
@@ -363,7 +477,7 @@
     var d = CHAIN[id];
     var el = document.getElementById('chain-detail');
     if (!d || !el) return;
-    el.innerHTML = '<h4>' + d.title + '</h4><p>' + d.body + '</p><p class="bi-cue">' + d.bi + '</p>';
+    el.innerHTML = '<h4>' + d.title + '</h4>' + (d.media || '') + '<p>' + d.body + '</p><p class="bi-cue">' + d.bi + '</p>';
   }
 
   var chainNodes = Array.prototype.slice.call(document.querySelectorAll('.chain-node'));
