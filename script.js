@@ -402,97 +402,51 @@
   var carlsbergStepper = document.querySelector('[data-stepper="carlsberg"]');
   if (carlsbergStepper) initStepper(carlsbergStepper);
 
-  /* --- Moonzen chain --- */
-  var CHAIN = {
-    rm: {
-      title: 'Raw material purchase',
-      body: 'Malt, hops, yeast and adjuncts — negotiate supplier terms, lead times and quality specs. GM view: cash tied in ingredients vs brew schedule risk.',
-      bi: 'BI cue: open POs, inbound ETA, cost/hl vs plan.'
-    },
-    inv: {
-      title: 'Raw materials & finished-goods inventory',
-      body: 'Balance cellar / cold-store stock with sell-out. Too thin risks stock-outs; too thick burns working capital and shelf life.',
-      bi: 'BI cue: days-of-cover by SKU, ageing lots, RM vs FG split.'
-    },
-    batch: {
-      title: 'Current production batch status',
-      body: 'Live view of brews in tank — fermentation stage, gravity checks, holds. Escalations when a batch slips the packaging window.',
-      bi: 'BI cue: batches in progress, yield variance, QA holds.'
-    },
-    mat: {
-      title: 'Packaging materials',
-      body: 'Kegs, bottles and labels are planned as their own beat, before a packaging run is booked. A line that is ready still waits if the keg, bottle or label is not.',
-      bi: 'BI cue: material cover vs brew plan, label lots, keg float.'
-    },
-    pack: {
-      title: 'Packaging runs',
-      body: 'Once kegs, bottles and labels are in, the can, bottle and keg lines run against demand and tank readiness. Changeovers and short runs eat efficiency.',
-      bi: 'BI cue: line utilisation, planned vs actual cases, scrap.'
-    },
-    wh: {
-      title: 'Warehousing',
-      body: 'Pick-face discipline, FEFO for craft SKUs, space for seasonal peaks and event volumes.',
-      bi: 'BI cue: warehouse occupancy, pick accuracy, slow movers.'
-    },
-    log: {
-      title: 'Logistics',
-      body: 'Deliveries to on-trade, retail and events — route density, cold-chain and cut-off times.',
-      bi: 'BI cue: on-time delivery, cost per drop, failed deliveries.'
-    },
-    tours: {
-      title: 'Weekly brewery tours',
-      body: 'Tours were hosted every week — a taproom rhythm, not a one-off open day. This still is the Moonzen taproom group from that Instagram post.',
-      media: '<a class="show-thumb tour-still" href="https://www.instagram.com/p/C3ZjdUMr3bJ/" target="_blank" rel="noopener"><img src="assets/moonzen-tour.jpg" alt="Group photo at the Moonzen taproom during a weekly brewery tour, with paper lanterns and ceramic jars behind the bar" width="640" height="640"></a><p><a href="https://www.instagram.com/p/C3ZjdUMr3bJ/" target="_blank" rel="noopener">See the photo on Instagram</a></p>',
-      bi: 'BI cue: weekly tour bookings vs taproom capacity.'
-    },
-    bill: {
-      title: 'Billing',
-      body: 'Invoice accuracy across B2B accounts, event deposits and online orders — clean billing protects cash collection later.',
-      bi: 'BI cue: invoice cycle time, credit notes, dispute rate.'
-    },
-    ar: {
-      title: 'Accounts receivable',
-      body: 'Income streams: B2B customers, events, online shop. Ageing and credit limits are a GM cash-flow lever.',
-      bi: 'BI cue: AR ageing, DSO, top overdue accounts.'
-    },
-    ap: {
-      title: 'Accounts payable',
-      body: 'Suppliers and vendors — maltsters, packaging, logistics partners. Align payment terms with cash from AR.',
-      bi: 'BI cue: AP due calendar, early-pay discounts taken.'
-    },
-    plan: {
-      title: 'Production planning',
-      body: 'Close the loop in Ekos: demand signal, brew plan, packaging materials, inventory targets. As AGM, P&L responsibility meant those trade-offs landed in one seat: what the brewery could brew, hold and sell, and whether the week’s mix earned its place.',
-      bi: 'BI cue: plan attainment in Ekos, capacity vs pipeline, material cover.'
-    },
-    brand: {
-      title: 'Branding, marketing and collaborations',
-      body: 'Seasonal drops and the 「墨水漂流·貳」 collaboration with Chapman To\u2019s Lateshow, plus interviews. No episode-by-episode claims here — only the collaboration and the interviews. Stories stay inside what production can brew.',
-      media: '<a class="show-thumb" href="https://www.youtube.com/watch?v=kxZNsgUzM9c" target="_blank" rel="noopener"><img src="assets/moxiu-piaoliu-thumb.jpg" alt="YouTube thumbnail for 墨水漂流·貳" width="1280" height="720"></a><p><a href="https://www.youtube.com/watch?v=kxZNsgUzM9c" target="_blank" rel="noopener">Watch on YouTube</a></p>',
-      bi: 'BI cue: collaboration reach, interview mix, sell-through of featured beers.'
-    }
-  };
+  /* --- Moonzen sections (copy lives in the encrypted page) --- */
+  function initDesk(root) {
+    if (!root) return;
+    var nav = null;
+    Array.prototype.forEach.call(root.children, function (el) {
+      if (!nav && el.classList && el.classList.contains('mz-nav')) nav = el;
+    });
+    if (!nav) return;
+    var tabs = Array.prototype.slice.call(nav.querySelectorAll('[role="tab"]'));
+    var panels = [];
+    Array.prototype.forEach.call(root.children, function (el) {
+      if (el.classList && el.classList.contains('mz-panel')) panels.push(el);
+    });
 
-  function showChain(id) {
-    var d = CHAIN[id];
-    var el = document.getElementById('chain-detail');
-    if (!d || !el) return;
-    el.innerHTML = '<h4>' + d.title + '</h4>' + (d.media || '') + '<p>' + d.body + '</p><p class="bi-cue">' + d.bi + '</p>';
+    function show(id) {
+      tabs.forEach(function (t) {
+        var on = t.getAttribute('aria-controls') === id;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        t.tabIndex = on ? 0 : -1;
+      });
+      panels.forEach(function (p) {
+        if (p.id === id) p.removeAttribute('hidden');
+        else p.setAttribute('hidden', '');
+      });
+    }
+
+    tabs.forEach(function (t, idx) {
+      t.addEventListener('click', function () { show(t.getAttribute('aria-controls')); });
+      t.addEventListener('keydown', function (e) {
+        var next = null;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (idx + 1) % tabs.length;
+        else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') next = (idx - 1 + tabs.length) % tabs.length;
+        else if (e.key === 'Home') next = 0;
+        else if (e.key === 'End') next = tabs.length - 1;
+        else return;
+        e.preventDefault();
+        tabs[next].focus();
+        show(tabs[next].getAttribute('aria-controls'));
+      });
+    });
   }
 
-  var chainNodes = Array.prototype.slice.call(document.querySelectorAll('.chain-node'));
-  chainNodes.forEach(function (node) {
-    node.addEventListener('click', function () {
-      chainNodes.forEach(function (n) {
-        n.classList.remove('is-active');
-        n.setAttribute('aria-pressed', 'false');
-      });
-      node.classList.add('is-active');
-      node.setAttribute('aria-pressed', 'true');
-      showChain(node.getAttribute('data-node'));
-    });
-  });
-  showChain('rm');
+  initDesk(document.getElementById('moonzen-desk'));
+  initDesk(document.getElementById('mz-ops'));
+  initDesk(document.getElementById('mz-cash'));
 
   /* --- MBA tabs --- */
   var mbaTabs = document.querySelector('[data-tabs="mba"]');
