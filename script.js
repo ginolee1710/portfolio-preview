@@ -518,35 +518,55 @@
     });
   }
 
-  function initIkigai(root) {
+  function initReviewDeck(root) {
     if (!root) return;
-    var buttons = Array.prototype.slice.call(root.querySelectorAll('[data-ikigai]'));
-    var note = root.querySelector('[data-ikigai-overlap]');
-    function sync() {
-      var n = 0;
-      buttons.forEach(function (b) {
-        if (b.getAttribute('aria-pressed') === 'true') n += 1;
+    var cards = Array.prototype.slice.call(root.querySelectorAll('[data-review]'));
+    var status = root.querySelector('[data-review-status]');
+    var prev = root.querySelector('[data-review-prev]');
+    var next = root.querySelector('[data-review-next]');
+    var scroller = root.querySelector('[data-review-scroller]');
+    var current = 0;
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function show(i, scroll) {
+      if (!cards.length || i < 0 || i >= cards.length) return;
+      current = i;
+      cards.forEach(function (c, idx) {
+        var on = idx === current;
+        c.classList.toggle('is-active', on);
+        c.setAttribute('aria-pressed', String(on));
       });
-      if (!note) return;
-      if (buttons.length && n === buttons.length) note.removeAttribute('hidden');
-      else note.setAttribute('hidden', '');
+      var card = cards[current];
+      if (scroll && card && card.scrollIntoView) {
+        card.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
+      }
+      if (status) {
+        status.textContent = 'Review ' + (current + 1) + ' of ' + cards.length + ' · ' + card.getAttribute('data-who') + ' · ' + card.getAttribute('data-when');
+      }
+      if (prev) prev.disabled = current === 0;
+      if (next) next.disabled = current === cards.length - 1;
     }
-    buttons.forEach(function (b) {
-      b.addEventListener('click', function () {
-        var on = b.getAttribute('aria-pressed') !== 'true';
-        b.setAttribute('aria-pressed', String(on));
-        b.classList.toggle('is-active', on);
-        sync();
-      });
+
+    cards.forEach(function (c, idx) {
+      c.addEventListener('click', function () { show(idx, true); });
     });
-    sync();
+    if (prev) prev.addEventListener('click', function () { show(current - 1, true); });
+    if (next) next.addEventListener('click', function () { show(current + 1, true); });
+    root.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      var tag = e.target && e.target.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      e.preventDefault();
+      show(e.key === 'ArrowRight' ? current + 1 : current - 1, true);
+      if (cards[current]) cards[current].focus({ preventScroll: true });
+    });
+    show(0, false);
   }
 
   var aiStepper = document.querySelector('[data-stepper="ai-journey"]');
   if (aiStepper) initStepper(aiStepper);
-  initIkigai(document.getElementById('ikigai-board'));
-  initSingleChoice(document.getElementById('research-lenses'));
-  initSingleChoice(document.getElementById('channel-behavior'));
-  initSingleChoice(document.getElementById('test-types'));
+  initSingleChoice(document.getElementById('fleet-map'));
+  initSingleChoice(document.getElementById('pipeline-gates'));
+  initReviewDeck(document.getElementById('etsy-reviews'));
 
 })();

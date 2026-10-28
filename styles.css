@@ -229,7 +229,7 @@ p{margin:0 0 1em}
 }
 
 /* ===== Interactive portfolio cases ===== */
-.pf-stack{display:flex;flex-direction:column;gap:28px}
+.pf-stack{display:flex;flex-direction:column;gap:28px;min-width:0}
 .case{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
 .case-head{margin-bottom:16px}
 .case-head h3{margin-bottom:.35em}
@@ -369,7 +369,9 @@ p{margin:0 0 1em}
 .mini-demo{font-style:italic;font-size:.85rem!important;color:var(--accent)!important}
 
 /* Digital marketplace journey */
-#case-ai{overflow:hidden}
+#case-ai{overflow:hidden;min-width:0;max-width:100%}
+#case-ai .stepper,#case-ai .stepper-panels,#case-ai .step-panel,#case-ai .review-deck{min-width:0;max-width:100%}
+#case-ai .choice-btn{overflow-wrap:anywhere}
 .choice-grid{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:12px}
 @media (min-width:760px){
   .choice-grid.cols-2{grid-template-columns:1fr 1fr}
@@ -387,6 +389,44 @@ p{margin:0 0 1em}
 #channel-behavior .framing-strip{margin:12px 0}
 .choice-detail[hidden]{display:none!important}
 .ikigai-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+
+/* Agentic fleet, gates, masked traction, review cards */
+#case-ai .fleet-node{display:block;width:100%;margin:0 0 8px}
+#case-ai .fleet-lane .fleet-node:last-child,#case-ai .fleet-career .fleet-node:last-child{margin-bottom:0}
+#case-ai .fleet-owner .fleet-node{border-color:var(--accent)}
+#case-ai .fleet-arrow{margin:0 0 8px;text-align:center;font-size:.75rem;font-weight:700;letter-spacing:.04em;color:var(--accent)}
+#case-ai .fleet-doors,#case-ai .fleet-career{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+#case-ai .fleet-doors .fleet-node,#case-ai .fleet-career .fleet-node{margin:0}
+#case-ai .fleet-specs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:8px;min-width:0}
+#case-ai .fleet-lane{background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:10px;min-width:0}
+#case-ai .fleet-lane .fleet-node{background:var(--surface)}
+#case-ai .fleet-lane h4{margin:0 0 8px;font-size:.72rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+#case-ai .fleet-detail{margin-top:4px}
+#case-ai .traction-stats{list-style:none;padding:0;margin:0 0 14px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+#case-ai .traction-stats li{background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+#case-ai .traction-stats strong{display:block;font-size:clamp(1.6rem,4vw,2rem);color:var(--primary);line-height:1.1;font-variant-numeric:tabular-nums}
+#case-ai .traction-stats span{display:block;margin-top:4px;color:var(--muted);font-size:.88rem}
+#case-ai .review-toolbar{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+#case-ai .review-toolbar p{margin:0;flex:1;text-align:center;font-size:.85rem;color:var(--muted)}
+#case-ai .review-scroller{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:2px 2px 10px;scrollbar-width:thin;min-width:0;max-width:100%}
+#case-ai .review-card{flex:0 0 min(88%,320px);scroll-snap-align:center;text-align:left;font:inherit;color:var(--text);background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;min-height:44px}
+#case-ai .review-card.is-active,#case-ai .review-card[aria-pressed="true"]{border-color:var(--primary);box-shadow:0 0 0 2px color-mix(in srgb,var(--primary) 25%,transparent);background:var(--surface)}
+#case-ai .review-stars,#case-ai .review-quote,#case-ai .review-by,#case-ai .review-product{display:block}
+#case-ai .review-stars{color:#b45309;letter-spacing:.08em;font-size:.95rem;margin-bottom:8px}
+[data-theme="dark"] #case-ai .review-stars{color:#ffcf8a}
+#case-ai .review-quote{font-size:.95rem;line-height:1.45;margin-bottom:10px}
+#case-ai .review-by{font-size:.82rem;color:var(--muted)}
+#case-ai .review-by strong{color:var(--text)}
+#case-ai .review-product{margin-top:6px;font-size:.82rem;font-weight:600;color:var(--primary)}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media (max-width:760px){
+  #case-ai .fleet-specs{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:6px}
+  #case-ai .fleet-lane{flex:0 0 82%;scroll-snap-align:start}
+  #case-ai .fleet-doors,#case-ai .fleet-career{grid-template-columns:1fr}
+  #case-ai .traction-stats{grid-template-columns:1fr}
+  #case-ai .review-toolbar{flex-wrap:wrap}
+  #case-ai .review-toolbar p{flex:1 0 100%;order:-1}
+}
 
 @media (max-width:760px){
   .ikigai-grid{grid-template-columns:1fr}
