@@ -441,8 +441,8 @@
     },
     tours: {
       title: 'Weekly brewery tours',
-      body: 'Tours were hosted every week — a taproom rhythm, not a one-off open day. The still is on Instagram; this page keeps the link rather than a stand-in photo.',
-      media: '<div class="tour-ph" role="img" aria-label="Placeholder. The brewery tour photo is on Instagram and is not embedded here."><strong>Tour photo</strong><span>Instagram still not embedded</span></div><p><a href="https://www.instagram.com/p/Ck-o_IBJh_J/" target="_blank" rel="noopener">See the photo on Instagram</a></p>',
+      body: 'Tours were hosted every week — a taproom rhythm, not a one-off open day. This still is the Moonzen taproom group from that Instagram post.',
+      media: '<a class="show-thumb tour-still" href="https://www.instagram.com/p/C3ZjdUMr3bJ/" target="_blank" rel="noopener"><img src="assets/moonzen-tour.jpg" alt="Group photo at the Moonzen taproom during a weekly brewery tour, with paper lanterns and ceramic jars behind the bar" width="640" height="640"></a><p><a href="https://www.instagram.com/p/C3ZjdUMr3bJ/" target="_blank" rel="noopener">See the photo on Instagram</a></p>',
       bi: 'BI cue: weekly tour bookings vs taproom capacity.'
     },
     bill: {
@@ -462,13 +462,13 @@
     },
     plan: {
       title: 'Production planning',
-      body: 'Close the loop in Ekos: demand signal, brew plan, packaging materials, inventory targets. The AGM seat is where those trade-offs get decided.',
+      body: 'Close the loop in Ekos: demand signal, brew plan, packaging materials, inventory targets. As AGM, P&L responsibility meant those trade-offs landed in one seat: what the brewery could brew, hold and sell, and whether the week’s mix earned its place.',
       bi: 'BI cue: plan attainment in Ekos, capacity vs pipeline, material cover.'
     },
     brand: {
       title: 'Branding, marketing and collaborations',
       body: 'Seasonal drops and the 「墨水漂流·貳」 collaboration with Chapman To\u2019s Lateshow, plus interviews. No episode-by-episode claims here — only the collaboration and the interviews. Stories stay inside what production can brew.',
-      media: '<a class="show-thumb" href="https://www.youtube.com/watch?v=kxZNsgUzM9c" target="_blank" rel="noopener"><img src="assets/moxiu-piaoliu-thumb.jpg" alt="YouTube thumbnail for 墨水漂流·貳" width="1280" height="720"></a>',
+      media: '<a class="show-thumb" href="https://www.youtube.com/watch?v=kxZNsgUzM9c" target="_blank" rel="noopener"><img src="assets/moxiu-piaoliu-thumb.jpg" alt="YouTube thumbnail for 墨水漂流·貳" width="1280" height="720"></a><p><a href="https://www.youtube.com/watch?v=kxZNsgUzM9c" target="_blank" rel="noopener">Watch on YouTube</a></p>',
       bi: 'BI cue: collaboration reach, interview mix, sell-through of featured beers.'
     }
   };
