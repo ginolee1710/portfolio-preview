@@ -341,15 +341,14 @@ p{margin:0 0 1em}
 .chain-detail h4{margin:0 0 8px;color:var(--primary)}
 .chain-detail p{margin:0 0 8px;color:var(--muted)}
 .chain-detail .bi-cue{font-size:.85rem;font-weight:600;color:var(--accent);margin:0}
-.chain-detail .show-thumb img,.chain-detail .tour-ph{margin-bottom:10px}
+.chain-detail .show-thumb img{margin-bottom:10px}
 .moonzen-beats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
 .moonzen-beats article{background:var(--bg-alt);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
 .moonzen-beats h4{margin:0 0 8px;font-size:.98rem}
 .moonzen-beats p{margin:8px 0 0;color:var(--muted);font-size:.92rem}
-.tour-ph{border:2px dashed var(--border);border-radius:10px;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;text-align:center;padding:16px;background:var(--surface);color:var(--muted);font-size:.88rem}
-.tour-ph strong{color:var(--text);font-size:.95rem}
 .show-thumb{display:block}
 .show-thumb img{width:100%;height:auto;border-radius:10px;border:1px solid var(--border)}
+.tour-still img{width:100%;max-width:420px;height:auto}
 
 /* MBA tabs */
 .tab-list{display:flex;gap:6px;overflow-x:auto;margin-bottom:14px;padding-bottom:4px}
