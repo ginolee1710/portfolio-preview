@@ -444,9 +444,7 @@
     });
   }
 
-  initDesk(document.getElementById('moonzen-desk'));
-  initDesk(document.getElementById('mz-ops'));
-  initDesk(document.getElementById('mz-cash'));
+  initDesk(document.getElementById('mz-reach'));
 
   /* --- MBA tabs --- */
   var mbaTabs = document.querySelector('[data-tabs="mba"]');
@@ -472,35 +470,9 @@
     });
   }
 
-  function initIkigai(root) {
-    if (!root) return;
-    var buttons = Array.prototype.slice.call(root.querySelectorAll('[data-ikigai]'));
-    var note = root.querySelector('[data-ikigai-overlap]');
-    function sync() {
-      var n = 0;
-      buttons.forEach(function (b) {
-        if (b.getAttribute('aria-pressed') === 'true') n += 1;
-      });
-      if (!note) return;
-      if (buttons.length && n === buttons.length) note.removeAttribute('hidden');
-      else note.setAttribute('hidden', '');
-    }
-    buttons.forEach(function (b) {
-      b.addEventListener('click', function () {
-        var on = b.getAttribute('aria-pressed') !== 'true';
-        b.setAttribute('aria-pressed', String(on));
-        b.classList.toggle('is-active', on);
-        sync();
-      });
-    });
-    sync();
-  }
-
   var aiStepper = document.querySelector('[data-stepper="ai-journey"]');
   if (aiStepper) initStepper(aiStepper);
-  initIkigai(document.getElementById('ikigai-board'));
   initSingleChoice(document.getElementById('research-lenses'));
   initSingleChoice(document.getElementById('channel-behavior'));
-  initSingleChoice(document.getElementById('test-types'));
 
 })();
