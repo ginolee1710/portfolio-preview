@@ -426,6 +426,16 @@ p{margin:0 0 1em}
 .shop-miles{list-style:none;padding:0;margin:0 0 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .shop-miles li{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 14px;color:var(--text);font-size:.95rem}
 .shop-miles strong{color:var(--primary)}
+.shop-split{align-items:stretch}
+.shop-split .shop-miles{grid-template-columns:1fr;gap:0;margin:0}
+.shop-split .shop-miles li{background:transparent;border:0;border-radius:0;border-bottom:1px solid var(--border);padding:10px 0}
+.shop-split .shop-miles li:last-child{border-bottom:0;padding-bottom:0}
+.shop-sub{margin:10px 0 0;font-size:.88rem;color:var(--muted)}
+.review-extract{margin:0 0 14px;padding:0 0 0 12px;border:0;border-left:3px solid var(--accent)}
+.review-extract p{margin:0 0 4px;font-size:.9rem;color:var(--text);line-height:1.45}
+.review-extract footer{font-size:.8rem;color:var(--muted)}
+.review-extract:last-child{margin-bottom:0}
+.gap-card .review-extract p{color:var(--text);margin:0 0 4px}
 
 @media (max-width:760px){
   .ikigai-grid{grid-template-columns:1fr}
